@@ -30,14 +30,10 @@ namespace Shopping.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shoppping.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shopping.API", Version = "v1" });
             });
 
-            services.AddScoped<ProductContext>(sp =>
-            {
-                var configuration = sp.GetRequiredService<IConfiguration>();
-                return new ProductContext(configuration);
-            });
+            services.AddScoped<ProductContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
