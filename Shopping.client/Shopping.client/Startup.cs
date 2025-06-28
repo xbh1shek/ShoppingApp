@@ -24,8 +24,14 @@ namespace Shopping.Client
         {
             services.AddHttpClient("ShoppingAPIClient", client =>
             {
-                //client.BaseAddress = new Uri("http://localhost:5000/"); // Shopping.API url     
-                client.BaseAddress = new Uri(Configuration["ShoppingAPIUrl"]);
+                var baseAddress = Configuration["ShoppingAPIUrl"];
+                if (string.IsNullOrWhiteSpace(baseAddress))
+                {
+                    throw new Exception("Missing required environment variable: ShoppingAPIUrl");
+                }
+
+                Console.WriteLine("Using ShoppingAPIUrl: " + baseAddress);
+                client.BaseAddress = new Uri(baseAddress);
             });
 
             services.AddControllersWithViews();

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Shopping.client.Models;
 using Shopping.Client.Models;
@@ -19,12 +19,13 @@ namespace Shopping.client.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var response = await _httpClient.GetAsync("http://localhost:5000/product");
+            var response = await _httpClient.GetAsync("/product"); // ✅ Use relative path
             var content = await response.Content.ReadAsStringAsync();
             var productList = JsonConvert.DeserializeObject<IEnumerable<Product>>(content);
-           
+
             return View(productList);
         }
+
 
         public IActionResult Privacy()
         {
