@@ -12,7 +12,7 @@ builder.Services.AddSingleton<ProductContext>();
 
 var app = builder.Build();
 
-//Always listen on 80
+//Listen to port 80 for K8s
 app.Urls.Add("http://0.0.0.0:80");
 
 
