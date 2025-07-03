@@ -12,12 +12,20 @@ builder.Services.AddSingleton<ProductContext>();
 
 var app = builder.Build();
 
+//Always listen on 80
+app.Urls.Add("http://0.0.0.0:80");
+
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+//Always enable Swagger
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 
