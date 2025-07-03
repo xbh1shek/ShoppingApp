@@ -31,51 +31,51 @@ namespace Shopping.API.Data
             {
                 new Product()
                 {
-                    Name = "IPhone X",
-                    Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                    Name = "Lightsaber",
+                    Description = "A rare plasma blade powered by kyber crystals and capable of cutting through almost anything.",
                     ImageFile = "product-1.png",
                     Price = 950.00M,
-                    Category = "Smart Phone"
+                    Category = "Sword"
                 },
                 new Product()
                 {
-                    Name = "Samsung 10",
-                    Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                    Name = "Omnitrix",
+                    Description = "A master-class in alien DNA rewriting unlimited species, real-time transformation, cosmic-level biotech on your wrist.",
                     ImageFile = "product-2.png",
                     Price = 840.00M,
-                    Category = "Smart Phone"
+                    Category = "Watch"
                 },
                 new Product()
                 {
-                    Name = "Huawei Plus",
-                    Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                    Name = "Mjölnir",
+                    Description = "Enchanted Uru hammer—channels lightning, flies on command, and only bows to the worthy.",
                     ImageFile = "product-3.png",
                     Price = 650.00M,
-                    Category = "White Appliances"
+                    Category = "Hammer"
                 },
                 new Product()
                 {
-                    Name = "Xiaomi Mi 9",
-                    Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                    Name = "Blacksaber",
+                    Description = "Ancient Mandalorian blade—black plasma, lightsaber tech, symbol of power, forged to rule.",
                     ImageFile = "product-4.png",
                     Price = 470.00M,
-                    Category = "White Appliances"
+                    Category = "Sword"
                 },
                 new Product()
                 {
-                    Name = "HTC U11+ Plus",
-                    Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                    Name = "The One Ring",
+                    Description = "Forged by darkness, grants invisibility and dominion—seductive, cursed, and bound to corrupt all who wear it.",
                     ImageFile = "product-5.png",
                     Price = 380.00M,
-                    Category = "Smart Phone"
+                    Category = "Ring"
                 },
                 new Product()
                 {
-                    Name = "LG G7 ThinQ EndofCourse",
-                    Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                    Name = "Elixir",
+                    Description = "Liquid legend—one drop heals, revives, or grants power beyond mortal limits; bottled magic, priceless in the right hands.",
                     ImageFile = "product-6.png",
                     Price = 240.00M,
-                    Category = "Home Kitchen"
+                    Category = "Portion"
                 }
             };
         }
