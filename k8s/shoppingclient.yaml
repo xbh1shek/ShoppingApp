@@ -42,7 +42,7 @@ kind: Service
 metadata:
   name: shoppingclient-service
 spec:
-  type: NodePort
+  type: NodePort      # NodePort in local/minikube and LoadBalancer in cloud
   selector:
     app: shoppingclient
   ports:
