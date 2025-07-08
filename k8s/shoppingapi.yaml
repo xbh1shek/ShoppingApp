@@ -46,6 +46,6 @@ spec:
     app: shoppingapi
   ports:
     - protocol: TCP
-      port: 8000       # port exposed by service (K8s NODE forwards external requests to SERVICE )
+      port: 8000       # What other pods use to reach this service (K8s NODE forwards external requests to SERVICE)
       targetPort: 80   # Pod's ContainerPort (on which SERVICE will forward request traffic to POD.), (Mostly same as a ContainerPort)
       nodePort: 31000  # External port on the worker node WHICH lets external users sends REQUESTS (30001–32767).
