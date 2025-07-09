@@ -1,0 +1,88 @@
+Azure Resources name:
+Resource Group: MyResourceGroup
+ACR: shoppingacrbat
+AKS cluster: aksbatcluster
+
+
+===============================================================
+
+K8
+
+Port forwarding:
+kubectl port-forward service/shoppingclient-service 8001:8001
+kubectl port-forward service/shoppingapi-service 8000:8000
+
+
+Build and push the existing image into DockerHub repo:
+docker build -t enixdocker1/shoppingapi:latest -f Shopping.API/Dockerfile .
+docker push enixdocker1/shoppingapi:latest
+
+===============================================================
+
+AKS
+
+
+#Login
+az login --tenant  
+
+Create the resource group:
+az group create --location southindia --resource-group MyResourceGroup
+
+Check/delete existing resource groups:
+az resource list --resource-group ShoppingApp    
+az resource delete --name DefaultResourceGroup-CID 
+
+Error while creating ACR > Register the Container Rege service into your account:
+az provider list --output table
+az provider list --query "[?registrationState=='Registered']" --output table
+az provider list --query "[?namespace=='Microsoft.ContainerService']" --output table
+az provider register --namespace Microsoft.ContainerService  
+az provider show -n Microsoft.ContainerService
+
+Create ACR inside the service group:
+az acr create --resource-group MyResourceGroup --name shoppingacr --sku Basic   
+
+Enabling admin account which is disabled by default:
+az acr update -n shoppingacrbat --admin-enabled true
+
+Login to the ACR:
+az acr login --name shoppingacrbat
+
+Find the name of the loginserver to use it while tagging new image:
+az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
+
+Create a latest tag image:
+docker tag shoppingapi:latest shoppingacrbat.azurecr.io/shoppingapi:v1
+docker tag shoppingclient:latest shoppingacrbat.azurecr.io/shoppingclient:v1
+
+Push the images into ACR:
+docker push shoppingacrbat.azurecr.io/shoppingapi:v1
+docker push shoppingacrbat.azurecr.io/shoppingclient:v1
+
+Verify the image inside the ACR:
+az acr repository list --name shoppingacrbat --output table
+
+Get the tags from the image:
+az acr repository show-tags --name shoppingacrbat --repository shoppingclient --output table
+
+Creating AKS cluster:
+az aks create --resource-group MyResourceGroup --name aksbatcluster --node-count 1 --generate-ssh-keys --attach-acr shoppingacrbat
+
+Download Azure AKS CLI to communicate with the AKS cluster:(Connecting the AKS with local kubectl):
+az aks install-cli
+
+Connect to AKS cluster using kubectl:
+aks get-credentials  --name aksbatcluster --overwrite-existing --resource-group MyResourceGroup
+
+
+
+
+
+
+
+
+
+
+
+
+
