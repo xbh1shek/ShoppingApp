@@ -19,7 +19,7 @@ spec:
           image: enixdocker1/shoppingapi:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 80    # port inside the container, where your app listens.
+            - containerPort: 8080    # port inside the container, where your app listens.
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
@@ -47,5 +47,5 @@ spec:
   ports:
     - protocol: TCP
       port: 8000       # What other pods use to reach this service (K8s NODE forwards external requests to SERVICE)
-      targetPort: 80   # Pod's ContainerPort (on which SERVICE will forward request traffic to POD.), (Mostly same as a ContainerPort)
+      targetPort: 8080   # Pod's ContainerPort (on which SERVICE will forward request traffic to POD.), (Mostly same as a ContainerPort)
       nodePort: 31000  # External port on the worker node WHICH lets external users sends REQUESTS (30001–32767).

@@ -12,8 +12,8 @@ builder.Services.AddSingleton<ProductContext>();
 
 var app = builder.Build();
 
-//Listen to port 80 for K8s
-app.Urls.Add("http://0.0.0.0:80");
+//Listen to port 8080(<1024) for K8s/AKS:
+app.Urls.Add("http://0.0.0.0:8080");
 
 
 // Configure the HTTP request pipeline.

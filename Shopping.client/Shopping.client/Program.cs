@@ -13,8 +13,8 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Bind to port 80 for Kubernetes
-app.Urls.Add("http://0.0.0.0:80");
+//Listen to port 8080(<1024) for K8s/AKS:
+app.Urls.Add("http://0.0.0.0:8080");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

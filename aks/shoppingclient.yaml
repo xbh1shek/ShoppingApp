@@ -17,10 +17,10 @@ spec:
     spec:
       containers:
         - name: shoppingclient
-          image: shoppingacrbat.azurecr.io/shoppingclient:v1
+          image: shoppingacrbat.azurecr.io/shoppingclient:v2
           imagePullPolicy: Always         
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
@@ -50,3 +50,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80      # What other pods use to reach this service (K8s NODE forwards external requests to SERVICE)
+      targetPort: 8080
