@@ -1,85 +1,116 @@
-Azure Resources name:
-Resource Group: MyResourceGroup
-ACR: shoppingacrbat
-AKS cluster: aksbatcluster
+============================= Azure Resources List =============================
+
+#Resource Group: MyResourceGroup
+#ACR: shoppingacrbat
+#AKS cluster: aksbatcluster
+#Server login name: shoppingacrbat.azurecr.io
+#Server Username: shoppingacrbat
+#Shoppingapi Image name inside ACR: shoppingacrbat.azurecr.io/shoppingapi:v1
+#Shoppingclient Image name inside ACR: shoppingacrbat.azurecr.io/shoppingclient:v1
+ 
+
+============================= Important Points =============================
+
+#If the container is trying to bind to a privileged port (i.e., ports below 1024 like 80) as a non-root user, which is not allowed by default in Linux containers, it will crash with (Permission denied).
 
 
-===============================================================
+============================= Docker/K8s =============================
 
-K8
+#Build and push the updated images with tags into DockerHub repo:
+docker build -t enixdocker1/shoppingapi:v2 -f Shopping.API/Dockerfile .
+docker push enixdocker1/shoppingapi:v2
+docker build -t enixdocker1/shoppingclient:v2 -f Shopping.client/Dockerfile .
+docker push enixdocker1/shoppingclient:v2
 
-Port forwarding:
+#Port forwarding for services (In case the specified port is not working):
 kubectl port-forward service/shoppingclient-service 8001:8001
 kubectl port-forward service/shoppingapi-service 8000:8000
 
 
-Build and push the existing image into DockerHub repo:
-docker build -t enixdocker1/shoppingapi:latest -f Shopping.API/Dockerfile .
-docker push enixdocker1/shoppingapi:latest
 
-===============================================================
-
-AKS
-
+============================== Azure =================================
 
 #Login
 az login --tenant  
 
-Create the resource group:
+#Create the Resource Group:
 az group create --location southindia --resource-group MyResourceGroup
 
-Check/delete existing resource groups:
+#Check/delete existing/unwanted resource groups:
 az resource list --resource-group ShoppingApp    
 az resource delete --name DefaultResourceGroup-CID 
 
-Error while creating ACR > Register the Container Rege service into your account:
+#Register the Container Registry service into your account (In case the service is not available in the region):
 az provider list --output table
 az provider list --query "[?registrationState=='Registered']" --output table
 az provider list --query "[?namespace=='Microsoft.ContainerService']" --output table
 az provider register --namespace Microsoft.ContainerService  
 az provider show -n Microsoft.ContainerService
 
-Create ACR inside the service group:
+#Create ACR inside the service group:
 az acr create --resource-group MyResourceGroup --name shoppingacr --sku Basic   
 
-Enabling admin account which is disabled by default:
+#Enabling admin account (access) which is disabled by default:
 az acr update -n shoppingacrbat --admin-enabled true
 
-Login to the ACR:
+#Login to the ACR:
 az acr login --name shoppingacrbat
 
-Find the name of the loginserver to use it while tagging new image:
+#Find the name of the loginserver to use it while tagging new image:
 az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
 
-Create a latest tag image:
+#Create a latest tag image:
 docker tag shoppingapi:latest shoppingacrbat.azurecr.io/shoppingapi:v1
 docker tag shoppingclient:latest shoppingacrbat.azurecr.io/shoppingclient:v1
 
-Push the images into ACR:
+#Push the images into ACR:
 docker push shoppingacrbat.azurecr.io/shoppingapi:v1
 docker push shoppingacrbat.azurecr.io/shoppingclient:v1
 
-Verify the image inside the ACR:
+#Verify the image inside the ACR:
 az acr repository list --name shoppingacrbat --output table
 
-Get the tags from the image:
+#Get the tags from the image:
 az acr repository show-tags --name shoppingacrbat --repository shoppingclient --output table
 
-Creating AKS cluster:
+#Creating AKS cluster in attached ACR:
 az aks create --resource-group MyResourceGroup --name aksbatcluster --node-count 1 --generate-ssh-keys --attach-acr shoppingacrbat
 
-Download Azure AKS CLI to communicate with the AKS cluster:(Connecting the AKS with local kubectl):
+#Updating the AKS cluster to map the image pull request to ACR:
+az aks update --resource-group MyResourceGroup --name aksbatcluster  --attach-acr shoppingacrbat 
+
+#Find the list of clusters in AKS:
+az aks list --output table
+
+#Download Azure AKS CLI to communicate with the AKS cluster (Connecting the AKS with local kubectl):
 az aks install-cli
 
-Connect to AKS cluster using kubectl:
-aks get-credentials  --name aksbatcluster --overwrite-existing --resource-group MyResourceGroup
+#Connect to AKS cluster using kubectl (Making new Context):
+az aks get-credentials  --name aksbatcluster --overwrite-existing --resource-group MyResourceGroup
+
+#Verify/use the current context:
+kubectl config current-context 
+kubectl config get-contexts    
+kubectl config use-context aksbatcluster
+
+#Verify that you are connected to the AKS:
+kubectl get nodes
+
+#Creating image pull secret for ACR container to authenticate AKS (Only for Minikube, Optional for AKS):
+kubectl create secret docker-registry acrbat-secret --docker-server=shoppingacrbat.azurecr.io --docker-username=shoppingacrbat --docker-password=<password> --docker-email=<email>
 
 
+#Creating AKS manifest files:
+1. For both the API and client yaml files, Update the container image name with the deployed ACR image name with it's tag.
+2. Add the 'imagePullSecrets' under the container specifications section.
+3. In the service maifest defination of the API, REMOVE the 
+ a. type: Nodepart (As in AKS, Default 'ClusterIP' will be used internally)
+ b. nodeport and targetport (As in AKS, we don't need port forwarding)
+4. In the API configmap.yaml, Remove the port number specified in the api_url
+5. In the service maifest defination of the client project,
+ a. Change the type from Nodeport to Loadbalancer (As we don't to access the local K8s externally and in AKS it can access the external ports automatically)
 
-
-
-
-
+==============================================================================================================================
 
 
 
