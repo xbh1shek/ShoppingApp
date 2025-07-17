@@ -109,11 +109,11 @@ kubectl create secret docker-registry acrbat-secret --docker-server=shoppingacrb
 4. In the API configmap.yaml, Remove the port number specified in the api_url
 5. In the service maifest defination of the client project,
  a. Change the type from Nodeport to Loadbalancer (As we don't to access the local K8s externally and in AKS it can access the external ports automatically)
+ 
+#Scaling the pods manually:
+kubectl scale --replicas=3 deployment.apps/shoppingclient-deployment  (Deployment name)
 
+#Checking the autoscaling definations:
+kubectl get hpa
 ==============================================================================================================================
-
-
-
-
-
 
